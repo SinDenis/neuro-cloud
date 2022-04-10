@@ -1,2 +1,2 @@
 # neuro-cloud
-Neuro cloud - MAI bachelor diploma
+Mai bachelor diplom Neuro cloud
