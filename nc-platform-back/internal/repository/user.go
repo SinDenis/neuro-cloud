@@ -2,9 +2,9 @@ package repository
 
 import (
 	"context"
-	"demo-rest/internal/domain"
 	"errors"
 	"github.com/jackc/pgx/v4/pgxpool"
+	"nc-platform-back/internal/domain"
 )
 
 const (

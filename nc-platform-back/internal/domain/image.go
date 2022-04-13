@@ -13,3 +13,9 @@ type Image struct {
 	DateUploaded time.Time `json:"dateUploaded"`
 	UserId       int64     `json:"userId"`
 }
+
+type ClassifyImgResult struct {
+	ImageId        int64  `json:"image_id"`
+	ImageClassName string `json:"image_class_name"`
+	Category       string `json:"category"`
+}

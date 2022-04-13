@@ -9,6 +9,7 @@ interface Image {
   description: string;
   s3Link: string;
   dateUploaded: Date;
+  label: string;
 }
 
 const ImagePage: React.FC = () => {
@@ -74,8 +75,7 @@ const ImagePage: React.FC = () => {
                 <img height="200" width="auto" src={image.s3Link}/>
               </div>
               <div className="card-content">
-                <p>I am a very simple card. I am good at containing small bits of information.
-                  I am convenient because I require little markup to use effectively.</p>
+                {image.label}
               </div>
               <div className="card-action">
                 {image.name}

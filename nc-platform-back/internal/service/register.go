@@ -1,10 +1,10 @@
 package service
 
 import (
-	"demo-rest/internal/domain"
-	"demo-rest/internal/repository"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
+	"nc-platform-back/internal/domain"
+	"nc-platform-back/internal/repository"
 )
 
 type RegisterService struct {

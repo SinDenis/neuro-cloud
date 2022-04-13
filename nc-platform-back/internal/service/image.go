@@ -2,16 +2,17 @@ package service
 
 import (
 	"context"
-	"demo-rest/internal/config"
-	"demo-rest/internal/domain"
-	"demo-rest/internal/dto"
-	"demo-rest/internal/repository"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/sirupsen/logrus"
 	"mime/multipart"
+	"nc-platform-back/internal/config"
+	"nc-platform-back/internal/domain"
+	"nc-platform-back/internal/dto"
+	"nc-platform-back/internal/producer"
+	"nc-platform-back/internal/repository"
 	"time"
 )
 
@@ -19,9 +20,10 @@ type ImageService struct {
 	logger          logrus.FieldLogger
 	s3Uploader      *s3manager.Uploader
 	imageRepository *repository.ImageRepository
+	imageProducer   *producer.ImageProducer
 }
 
-func NewImageService(config *config.Config, imageRepository *repository.ImageRepository) *ImageService {
+func NewImageService(config *config.Config, imageRepository *repository.ImageRepository, imageProducer *producer.ImageProducer) *ImageService {
 	sess, err := session.NewSession(&aws.Config{
 		Region:      aws.String("eu-west-2"),
 		Credentials: credentials.NewStaticCredentials(config.S3AccessKey, config.S3PrivateKey, ""),
@@ -34,6 +36,7 @@ func NewImageService(config *config.Config, imageRepository *repository.ImageRep
 		logger:          logrus.New(),
 		s3Uploader:      s3manager.NewUploader(sess),
 		imageRepository: imageRepository,
+		imageProducer:   imageProducer,
 	}
 }
 
@@ -60,11 +63,16 @@ func (s *ImageService) Upload(context context.Context, file multipart.File, head
 		UserId:       int64(context.Value("userId").(float64)),
 		DateUploaded: time.Now().UTC(),
 	}
-	err = s.imageRepository.SaveImg(img)
+	image, err := s.imageRepository.SaveImg(img)
 	if err != nil {
 		s.logger.Error(err)
 		return err
 	}
 
+	s.imageProducer.SendImageClassificationEvent(image)
 	return nil
+}
+
+func (s *ImageService) UpdateImage(result domain.ClassifyImgResult) {
+	s.imageRepository.UpdateImgLabel(result.ImageId, result.ImageClassName)
 }

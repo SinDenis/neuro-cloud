@@ -1,12 +1,12 @@
 package handler
 
 import (
-	"demo-rest/internal/domain"
-	"demo-rest/internal/service"
 	"encoding/json"
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/sirupsen/logrus"
+	"nc-platform-back/internal/domain"
+	"nc-platform-back/internal/service"
 	"net/http"
 )
 

@@ -1,11 +1,11 @@
 package service
 
 import (
-	"demo-rest/internal/config"
-	"demo-rest/internal/repository"
 	"github.com/go-chi/jwtauth"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
+	"nc-platform-back/internal/config"
+	"nc-platform-back/internal/repository"
 )
 
 type AuthService struct {

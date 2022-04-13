@@ -1,11 +1,11 @@
 package handler
 
 import (
-	"demo-rest/internal/dto"
-	"demo-rest/internal/service"
 	"encoding/json"
 	"github.com/go-chi/chi/v5"
 	"github.com/sirupsen/logrus"
+	"nc-platform-back/internal/dto"
+	"nc-platform-back/internal/service"
 	"net/http"
 	"strconv"
 )

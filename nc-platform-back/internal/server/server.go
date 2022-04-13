@@ -1,14 +1,14 @@
 package server
 
 import (
-	"demo-rest/internal/config"
-	"demo-rest/internal/handler"
-	"demo-rest/internal/interceptor"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/jwtauth"
 	"log"
+	"nc-platform-back/internal/config"
+	"nc-platform-back/internal/handler"
+	"nc-platform-back/internal/interceptor"
 	"net/http"
 )
 

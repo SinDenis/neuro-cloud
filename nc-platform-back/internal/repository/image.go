@@ -2,41 +2,50 @@ package repository
 
 import (
 	"context"
-	"demo-rest/internal/domain"
-	"demo-rest/internal/dto"
 	"fmt"
 	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/sirupsen/logrus"
+	"nc-platform-back/internal/domain"
+	"nc-platform-back/internal/dto"
 )
 
 const (
+	selectNextId   = "select nextval('image_seq')"
 	insertImgQuery = `insert into image(id, name, size, description, s3_link, dateUploaded, user_id)
-						values (nextval('image_seq'), $1, $2, $3, $4, $5, $6)`
-	selectUserImagesQuery = `select id, name, size, s3_link, dateuploaded
+						values ($1, $2, $3, $4, $5, $6, $7)`
+	selectUserImagesQuery = `select id, name, size, s3_link, dateuploaded, label
 							from image where user_id = $1 order by dateuploaded desc limit $2 offset $3`
+	updateImgLabelById = "update image set label = $1 where id = $2"
 )
 
 type ImageRepository struct {
-	pool *pgxpool.Pool
+	logger logrus.FieldLogger
+	pool   *pgxpool.Pool
 }
 
 func NewImageRepository(pool *pgxpool.Pool) *ImageRepository {
-	return &ImageRepository{pool: pool}
+	return &ImageRepository{logger: logrus.New(), pool: pool}
 }
 
-func (r *ImageRepository) SaveImg(image domain.Image) error {
+func (r *ImageRepository) SaveImg(image domain.Image) (domain.Image, error) {
 	var description interface{} = nil
 	if len(image.Description) > 0 {
 		description = image.Description
 	}
+	id, err := r.getNextId()
+	image.Id = id
+	if err != nil {
+		return domain.Image{}, err
+	}
 	query, err := r.pool.Query(
 		context.Background(),
 		insertImgQuery,
-		image.Name, image.Size, description, image.S3Link, image.DateUploaded, image.UserId)
+		image.Id, image.Name, image.Size, description, image.S3Link, image.DateUploaded, image.UserId)
 	defer query.Close()
 	if err != nil {
-		return err
+		return domain.Image{}, err
 	}
-	return nil
+	return image, nil
 }
 
 func (r *ImageRepository) GetUserImages(userId int64, param dto.PagingParam) ([]domain.Image, error) {
@@ -49,11 +58,28 @@ func (r *ImageRepository) GetUserImages(userId int64, param dto.PagingParam) ([]
 	var images []domain.Image
 	var image domain.Image
 	for rows.Next() {
-		err := rows.Scan(&image.Id, &image.Name, &image.Size, &image.S3Link, &image.DateUploaded)
+		err := rows.Scan(&image.Id, &image.Name, &image.Size, &image.S3Link, &image.DateUploaded, &image.Label)
 		if err != nil {
 			fmt.Println(err)
 		}
 		images = append(images, image)
 	}
 	return images, nil
+}
+
+func (r *ImageRepository) getNextId() (int64, error) {
+	var id int64
+	rows, _ := r.pool.Query(context.Background(), selectNextId)
+	defer rows.Close()
+	rows.Next()
+	rows.Scan(&id)
+	return id, nil
+}
+
+func (r *ImageRepository) UpdateImgLabel(imgId int64, label string) {
+	rows, err := r.pool.Query(context.Background(), updateImgLabelById, label, imgId)
+	if err != nil {
+		r.logger.Errorf("Failed update label for img = %d", imgId, err)
+	}
+	rows.Close()
 }
