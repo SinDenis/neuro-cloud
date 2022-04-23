@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nc-platform-back-deployment
+  labels:
+    service: nc-platform-back
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: nc-platform-back
+  template:
+    metadata:
+      labels:
+        service: nc-platform-back
+    spec:
+      containers:
+        - name: nc-platform-back
+          image: csindenis/nc-platform-back:2022.1.1
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              memory: "300Mi"
+              cpu: "300m"

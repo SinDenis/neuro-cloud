@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nc-platform-ui-deployment
+  labels:
+    service: nc-platform-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: nc-platform-ui
+  template:
+    metadata:
+      labels:
+        service: nc-platform-ui
+    spec:
+      containers:
+        - name: nc-platform-ui
+          image: csindenis/nc-platform-ui:2022.1.1
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              memory: "800Mi"
+              cpu: "300m"
+            requests:
+              memory: "800Mi"
+              cpu: "300m"

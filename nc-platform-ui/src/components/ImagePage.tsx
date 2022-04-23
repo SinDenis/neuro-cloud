@@ -19,7 +19,7 @@ const ImagePage: React.FC = () => {
 
   const getImages = () => {
     setLoad(true);
-    axios.get<Image[]>('http://localhost:8080/api/images', {
+    axios.get<Image[]>('https://neuro-cloud-back-sindenis.cloud.okteto.net/api/images', {
       headers: {
         'Authorization': `Bearer ${new Cookies().get('jwt')}`
       },
@@ -45,7 +45,7 @@ const ImagePage: React.FC = () => {
     }
     const formData = new FormData();
     formData.append('img', files[0]);
-    axios.post('http://localhost:8080/api/images', formData, config)
+    axios.post('https://neuro-cloud-back-sindenis.cloud.okteto.net/api/images', formData, config)
       .then(v => {
         getImages();
         event.preventDefault();

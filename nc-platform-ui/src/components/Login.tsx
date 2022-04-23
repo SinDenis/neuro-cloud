@@ -22,7 +22,7 @@ const Login: React.FC = () => {
   const onChangeUsername = (username: string) => setUser({...user, username})
   const onChangePassword = (password: string) => setUser({...user, password})
   const onSubmit = () => {
-    axios.post<LoginResponse>('http://localhost:8080/api/login', {}, { auth: {...user} })
+    axios.post<LoginResponse>('https://neuro-cloud-back-sindenis.cloud.okteto.net/api/login', {}, { auth: {...user} })
       .then(r => {
         new Cookies().set('jwt', r.data.jwt);
         navigate('/main');

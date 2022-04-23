@@ -25,6 +25,7 @@ type ImageService struct {
 
 func NewImageService(config *config.Config, imageRepository *repository.ImageRepository, imageProducer *producer.ImageProducer) *ImageService {
 	sess, err := session.NewSession(&aws.Config{
+		Endpoint:    aws.String(config.S3Url),
 		Region:      aws.String("eu-west-2"),
 		Credentials: credentials.NewStaticCredentials(config.S3AccessKey, config.S3PrivateKey, ""),
 	})
@@ -48,7 +49,7 @@ func (s *ImageService) GetUserImages(ctx context.Context, pagingParam dto.Paging
 
 func (s *ImageService) Upload(context context.Context, file multipart.File, header *multipart.FileHeader) error {
 	response, err := s.s3Uploader.Upload(&s3manager.UploadInput{
-		Bucket: aws.String("dsin-neuro-storage"),
+		Bucket: aws.String("neuro-cloud"),
 		Key:    aws.String("images/" + header.Filename),
 		Body:   file,
 	})

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nc-file-processing-deployment
+  labels:
+    service: nc-file-processing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: nc-file-processing
+  template:
+    metadata:
+      labels:
+        service: nc-file-processing
+    spec:
+      containers:
+        - name: nc-file-processing
+          image: csindenis/nc-file-processing:2022.1.1
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              memory: "300Mi"
+              cpu: "300m"

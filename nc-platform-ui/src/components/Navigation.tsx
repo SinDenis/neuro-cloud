@@ -1,5 +1,6 @@
 import React from "react";
 import {NavLink} from "react-router-dom";
+import Cookies from "universal-cookie";
 
 const Navigation: React.FC = () => {
   return (
@@ -13,7 +14,7 @@ const Navigation: React.FC = () => {
                   <li><NavLink to="/audio">Аудио</NavLink></li>
                   <li><NavLink to="/login">Войти</NavLink></li>
                   <li><NavLink to="/register">Регистрация</NavLink></li>
-                  <li><a href="#">Выход</a></li>
+                  <li><a href="#" onClick={ () => new Cookies().remove('jwt') }>Выход</a></li>
               </ul>
           </div>
       </nav>

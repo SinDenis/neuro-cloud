@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nc-platform-back-service
+spec:
+  selector:
+    service: nc-platform-back
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP

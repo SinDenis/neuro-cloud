@@ -118,7 +118,7 @@ func (c *ImageConsumer) classifyImg(kafkaMsg []byte) error {
 		return err
 	}
 
-	r, _ := http.NewRequest("POST", "http://127.0.0.1:5000/predict", body)
+	r, _ := http.NewRequest("POST", "https://img-neuro-sindenis.cloud.okteto.net/predict", body)
 	r.Header.Add("Content-type", writer.FormDataContentType())
 	client := &http.Client{}
 	resp, err := client.Do(r)

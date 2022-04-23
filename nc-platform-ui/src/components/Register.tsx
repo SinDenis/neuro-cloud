@@ -20,7 +20,7 @@ const Register: React.FC = () => {
   const onChangePassword = (password: string) => setUser({...user, password})
   const onChangeEmail = (email: string) => setUser({...user, email})
   const onSubmit = () => {
-    axios.post('http://localhost:8080/api/register', {...user}, {})
+    axios.post('https://neuro-cloud-back-sindenis.cloud.okteto.net/api/register', {...user}, {})
       .then(_ => navigate('/login'))
       .catch(err => console.log(err))
   }

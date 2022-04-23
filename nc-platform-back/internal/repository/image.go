@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/sirupsen/logrus"
@@ -58,7 +59,11 @@ func (r *ImageRepository) GetUserImages(userId int64, param dto.PagingParam) ([]
 	var images []domain.Image
 	var image domain.Image
 	for rows.Next() {
-		err := rows.Scan(&image.Id, &image.Name, &image.Size, &image.S3Link, &image.DateUploaded, &image.Label)
+		var imageLabel sql.NullString
+		err := rows.Scan(&image.Id, &image.Name, &image.Size, &image.S3Link, &image.DateUploaded, &imageLabel)
+		if imageLabel.Valid {
+			image.Label = imageLabel.String
+		}
 		if err != nil {
 			fmt.Println(err)
 		}

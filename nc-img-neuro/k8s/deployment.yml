@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nc-img-neuro-deployment
+  labels:
+    service: nc-img-neuro
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: nc-img-neuro
+  template:
+    metadata:
+      labels:
+        service: nc-img-neuro
+    spec:
+      containers:
+        - name: nc-img-neuro
+          image: csindenis/img-neuro:2022.1.1
+          ports:
+            - containerPort: 5000
+          resources:
+            limits:
+              memory: "500Mi"
+              cpu: "300m"
